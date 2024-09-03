@@ -4,34 +4,46 @@ import java.util.Stack;
 
 public class Solution {
     public String decodeString(String s) {
+        //create a stack of characters
         Stack<Character> stack = new Stack<>();
-
-        for (char c : s.toCharArray()) {
-            if (c != ']') {
-                stack.push(c);
+        //iterate through the String
+        for (int i = 0; i < s.length(); i++) {
+            //add all characters that aren't]' to the stack
+            if (s.charAt(i) != ']') {
+                stack.add(s.charAt(i));
             } else {
+                //build a string with characters up to before the character '['
+                //in the stack
                 StringBuilder sb = new StringBuilder();
-                while(!stack.isEmpty() && Character.isLetter(stack.peek())) {
+                while(!stack.empty() && stack.peek() != '[') {
                     sb.insert(0, stack.pop());
                 }
                 stack.pop();
-                String sub = sb.toString();
+                String stringTemp = sb.toString();
                 sb = new StringBuilder();
-                while(!stack.isEmpty() && Character.isDigit(stack.peek())) {
+                //build an integer with all the numbers before a letter appears in
+                //the stack
+                while(!stack.empty() && Character.isDigit(stack.peek())) {
                     sb.insert(0, stack.pop());
                 }
                 int count = Integer.valueOf(sb.toString());
-                for (int i = 0; i < count; i++) {
-                    for (int j = 0; j < sub.length(); j++) {
-                        stack.push(sub.charAt(j));
+                //after we find the frequency and the string
+                //add that number of times of the characters in the string
+                //just found back to the stack
+                for (int j = 1; j <= count; j++) {
+                    for (int k = 0; k < stringTemp.length(); k++) {
+                        stack.add(stringTemp.charAt(k));
                     }
                 }
             }
         }
+        //create a string builder to return the result
         StringBuilder result = new StringBuilder();
-        while (!stack.isEmpty()) {
-            result.insert(0, stack.pop());
+        //add characters in the stack until the stack is empty
+        while(!stack.empty()) {
+            result.append(stack.pop());
         }
-        return result.toString();
+        //reverse the string builder
+        return result.reverse().toString();
     }
 }
